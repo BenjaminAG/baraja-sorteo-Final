@@ -154,5 +154,8 @@ def logout():
     return redirect(url_for("login"))
 
 if __name__ == "__main__":
+    import os
     crear_tabla_si_no_existe()
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # usa 5000 por defecto si no hay PORT
+    app.run(host="0.0.0.0", port=port)
+
