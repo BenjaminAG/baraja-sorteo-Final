@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Sorteo Baraja Española</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body data-rol="{{ rol }}">
+  <h1>Sorteo con Baraja Española</h1>
+
+  <div class="acciones">
+    <button onclick="seleccionarAlAzar()">Seleccionar al azar</button>
+    {% if usuario %}
+      <span>Usuario: {{ usuario }} ({{ rol }})</span>
+      <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">Iniciar sesión</a>
+    {% endif %}
+  </div>
+
+  <!-- Baraja de cartas -->
+  <div id="baraja" class="baraja">
+    {% for carta in cartas %}
+      <div class="carta"
+           onclick="seleccionarCarta('{{ carta.codigo }}', '{{ carta.codigo }}.png', {{ 'true' if carta.asignada else 'false' }})"
+           style="cursor: {% if carta.asignada and rol != 'admin' %}not-allowed{% else %}pointer{% endif %};">
+        <img src="/static/cartas/{% if carta.asignada %}{{ carta.codigo }}.png{% else %}reverso.png{% endif %}"
+             alt="{{ carta.codigo }}">
+
+        {% if carta.asignada and rol != 'admin' %}
+          <div class="info">
+            <strong>{{ carta.nombre }}</strong><br>
+            <small>{{ carta.telefono }}</small><br>
+            
+          </div>
+        {% elif carta.asignada and rol == 'admin' %}
+          <!-- No mostrar botones aquí; el admin usa modal -->
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Modal único para registrar/editar/eliminar -->
+  <div id="modalGanador" class="modal" style="display: none;">
+    <div class="modal-contenido">
+      <span class="cerrar" onclick="cerrarModal()">&times;</span>
+      <h2 id="modalTitulo">Registrar ganador</h2>
+
+      <div id="cartaSeleccionadaVista"></div>
+
+      <form id="formGanador" onsubmit="guardarGanador(event)">
+        <input type="hidden" id="modoOperacion" value="registrar">
+        <input type="hidden" id="codigo" name="codigo">
+
+        <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
+        <input type="tel"
+               id="telefono"
+               name="telefono"
+               placeholder="Teléfono"
+               required
+               maxlength="10"
+               oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+               pattern="[0-9]{10}"
+               title="Debe contener solo 10 dígitos numéricos">
+
+        <div class="botones-modal">
+          <button type="submit" id="btnGuardar">Guardar</button>
+          <button type="button" id="btnEliminar" onclick="eliminarGanador(event)">Eliminar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de advertencias -->
+  <div id="modalAdvertencia" class="modal" style="display: none;">
+    <div class="modal-contenido">
+      <span class="cerrar" onclick="cerrarModalAdvertencia()">&times;</span>
+      <p id="mensajeAdvertencia"></p>
+    </div>
+  </div>
+
+  <script src="/static/js/scripts.js"></script>
+</body>
+</html>

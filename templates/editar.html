@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Carta</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <h1>Editar Carta {{ carta.codigo }}</h1>
+
+    <form method="POST">
+        <label for="nombre">Nombre:</label><br>
+        <input type="text" name="nombre" id="nombre" value="{{ carta.nombre or '' }}" required><br><br>
+
+        <label for="telefono">Teléfono:</label><br>
+        <input type="tel" name="telefono" id="telefono" value="{{ carta.telefono or '' }}" 
+               pattern="[0-9]{10}" maxlength="10" required title="Debe contener solo 10 dígitos numéricos"><br><br>
+
+        <button type="submit">Guardar cambios</button>
+        <a href="{{ url_for('index') }}"><button type="button">Cancelar</button></a>
+    </form>
+</body>
+</html>
