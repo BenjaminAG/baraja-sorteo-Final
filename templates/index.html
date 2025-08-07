@@ -30,11 +30,13 @@
         {% if carta.asignada and rol != 'admin' %}
           <div class="info">
             <strong>{{ carta.nombre }}</strong><br>
-            <small>{{ carta.telefono }}</small><br>
-            
           </div>
         {% elif carta.asignada and rol == 'admin' %}
           <!-- No mostrar botones aquí; el admin usa modal -->
+          <div class="info">
+            <strong>{{ carta.nombre }}</strong><br>
+            <small>{{ carta.telefono }}</small><br>
+          </div>
         {% endif %}
       </div>
     {% endfor %}
